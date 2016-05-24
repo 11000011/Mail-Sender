@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+"""
+A python3 script for sending mails
+
+Default is iitk cc smtp server
+"""
+import smtplib  as sl
+import getpass
+
+def main():
+    """
+    The main body
+    """
+    username = input('Username : ')
+    passwd = getpass.getpass()
+
+    # Accepting user input
+    _from = input('From :')
+    send_to = input('Enter Recipient separated by commas: ').split(',')
+    sub = input('Sub :')
+    print('\nEnter Message end with ###: ')
+    sentinel = '###'
+    # Accept message terminated by sentinel
+    mes = '\n'.join(iter(input, sentinel))
+
+    print('Success!!')
+    print('\nSending from :\n' + _from)
+    print('\nSending to :\n' + str(send_to))
+    print('\nSubject\n' + sub)
+    print('\nMessage :\n' + mes)
+
+    # Only works form inside iitk
+    server = sl.SMTP('smtp.cc.iitk.ac.in', 25)
+    # For outside, use :
+    # server = sl.SMTP('mmtp.iitk.ac.in', 25)
+
+    # Below two lines are required for other servers
+    # server.starttls()
+    # server.ehlo()
+    server.login(username, passwd)
+
+    # Creating Header
+    to_send = "To: " +  ", ".join(send_to)
+    from_send = "From: " + _from
+    sub_send = "Subject: " + sub
+    message = "\r\n".join([from_send, to_send, sub_send, '', mes])
+
+    # Sending Mail
+    server.sendmail(_from, send_to, message)
+    server.quit()
+
+if __name__ == "__main__":
+    main()
