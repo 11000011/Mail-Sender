@@ -17,6 +17,8 @@ def main():
     # Accepting user input
     _from = input('From :')
     send_to = input('Enter Recipient separated by commas: ').split(',')
+    cc = input('Cc : ').split(',')
+    bcc = input('Bcc : ').split(',')
     sub = input('Sub :')
     print('\nEnter Message end with ###: ')
     sentinel = '###'
@@ -26,6 +28,8 @@ def main():
     print('Success!!')
     print('\nSending from :\n' + _from)
     print('\nSending to :\n' + str(send_to))
+    print('\nSending cc :\n' + str(cc))
+    print('\nSending bcc :\n' + str(bcc))
     print('\nSubject\n' + sub)
     print('\nMessage :\n' + mes)
 
@@ -40,13 +44,14 @@ def main():
     server.login(username, passwd)
 
     # Creating Header
-    to_send = "To: " +  ", ".join(send_to)
+    to_send = "To: " + ", ".join(send_to)
+    cc_send = "Cc: " + ", ".join(cc)
     from_send = "From: " + _from
     sub_send = "Subject: " + sub
-    message = "\r\n".join([from_send, to_send, sub_send, '', mes])
+    message = "\r\n".join([from_send, to_send, cc_send, sub_send, '', mes])
 
     # Sending Mail
-    server.sendmail(_from, send_to, message)
+    server.sendmail(_from, send_to + cc + bcc, message)
     server.quit()
 
 if __name__ == "__main__":
